@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stefan's JGA — Prag 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --card: #1a1a24;
+    --border: rgba(255,255,255,0.08);
+    --text: #f0ede8;
+    --muted: #7a7880;
+    --amber: #EF9F27;
+    --amber-light: #FAC775;
+    --teal: #1D9E75;
+    --coral: #D85A30;
+    --blue: #378ADD;
+    --pink: #D4537E;
+    --line: rgba(239,159,39,0.3);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+
+  /* HEADER */
+  .hero {
+    padding: 60px 24px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; left: 50%;
+    transform: translateX(-50%);
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(239,159,39,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 12px;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 14vw, 110px);
+    letter-spacing: 0.04em;
+    line-height: 0.95;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .hero-title span { color: var(--amber); }
+  .hero-sub {
+    font-size: 14px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 16px;
+  }
+  .hero-dates {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    padding: 8px 20px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .hero-dates strong { color: var(--text); font-weight: 500; }
+
+  /* LAYOUT */
+  .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  /* DAY HEADER */
+  .day-block { margin-top: 48px; }
+  .day-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .day-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    color: var(--text);
+  }
+  .day-date {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .day-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 24px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px; bottom: 8px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--amber) 0%, var(--line) 50%, transparent 100%);
+  }
+
+  .event {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .event::before {
+    content: '';
+    position: absolute;
+    left: -28px;
+    top: 10px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    border: 1.5px solid var(--amber);
+    background: var(--bg);
+    z-index: 1;
+  }
+  .event.highlight::before {
+    background: var(--amber);
+    box-shadow: 0 0 0 4px rgba(239,159,39,0.15);
+    width: 10px; height: 10px;
+    left: -29px; top: 9px;
+  }
+  .event.travel::before { border-color: var(--teal); }
+  .event.food::before { border-color: var(--coral); }
+  .event.sleep::before { border-color: var(--muted); background: var(--bg); }
+
+  .event-time {
+    min-width: 52px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    padding-top: 8px;
+    text-align: right;
+  }
+  .event-time.amber { color: var(--amber); }
+
+  .event-card {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: border-color 0.2s;
+  }
+  .event-card:hover { border-color: rgba(255,255,255,0.14); }
+  .event-card.accent-amber { border-left: 3px solid var(--amber); }
+  .event-card.accent-teal  { border-left: 3px solid var(--teal); }
+  .event-card.accent-coral { border-left: 3px solid var(--coral); }
+  .event-card.accent-blue  { border-left: 3px solid var(--blue); }
+  .event-card.accent-pink  { border-left: 3px solid var(--pink); }
+
+  .event-icon {
+    font-size: 16px;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .event-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+  .event-detail {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .event-detail a {
+    color: var(--amber);
+    text-decoration: none;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+  }
+  .badge-amber { background: rgba(239,159,39,0.15); color: var(--amber-light); }
+  .badge-teal  { background: rgba(29,158,117,0.15); color: #5DCAA5; }
+  .badge-coral { background: rgba(216,90,48,0.15); color: #F0997B; }
+  .badge-blue  { background: rgba(55,138,221,0.15); color: #85B7EB; }
+  .badge-pink  { background: rgba(212,83,126,0.15); color: #ED93B1; }
+  .badge-gray  { background: rgba(255,255,255,0.06); color: var(--muted); }
+
+  /* OPEN END */
+  .open-end {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 0 0 24px;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .open-end::before {
+    content: '∞';
+    font-size: 20px;
+    color: var(--amber);
+  }
+
+  /* TRAVEL BLOCK */
+  .travel-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--teal);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin: 0 0 24px 72px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .travel-icon { font-size: 20px; }
+  .travel-info { flex: 1; }
+  .travel-route {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .travel-meta { font-size: 12px; color: var(--muted); }
+  .travel-duration {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--teal);
+    letter-spacing: 0.05em;
+  }
+
+  /* DIVIDER */
+  .day-divider {
+    margin: 48px 0 0;
+    border: none;
+    border-top: 1px solid var(--border);
+  }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 60px;
+    text-align: center;
+    font-size: 11px;
+    color: #3a3840;
+    letter-spacing: 0.06em;
+  }
+  .footer span { color: var(--amber); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <p class="hero-eyebrow">Junggesellenabschied 2026</p>
+  <h1 class="hero-title">Stefan's<br><span>JGA</span></h1>
+  <p class="hero-sub">Praha / Prag</p>
+  <div class="hero-dates">
+    <strong>01. Mai</strong>
+    <span style="opacity:0.4">—</span>
+    <strong>03. Mai 2026</strong>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- FREITAG -->
+  <div class="day-block">
+    <div class="day-header">
+      <div>
+        <div class="day-label">Freitag</div>
+        <div class="day-date">01. Mai 2026</div>
+      </div>
+      <div class="day-line"></div>
+    </div>
+
+    <!-- Anreise -->
+    <div class="event">
+      <div class="event-time amber">07:00</div>
+      <div class="event-card accent-amber">
+        <span class="badge badge-amber">Start</span>
+        <div class="event-name">Treffen bei Stefan</div>
+        <div class="event-detail">Alle pünktlich da — los geht's!</div>
+      </div>
+    </div>
+
+    <!-- Fahrt -->
+    <div class="travel-bar">
+      <div class="travel-icon">🚗</div>
+      <div class="travel-info">
+        <div class="travel-route">Deutschland → Prag</div>
+        <div class="travel-meta">ca. 07:00 Abfahrt · Autobahn-Trip</div>
+      </div>
+      <div class="travel-duration">~7H</div>
+    </div>
+
+    <!-- Checkin -->
+    <div class="event">
+      <div class="event-time amber">15:00</div>
+      <div class="event-card accent-teal">
+        <span class="badge badge-teal">Unterkunft</span>
+        <div class="event-name">Check-in Airbnb</div>
+        <div class="event-detail">Oldrichova 247/5, 101 Prague 2<br>Praha 12800, Tschechien</div>
+      </div>
+    </div>
+
+    <!-- Frisch machen -->
+    <div class="event sleep">
+      <div class="event-time">~15:30</div>
+      <div class="event-card">
+        <span class="badge badge-gray">Pause</span>
+        <div class="event-name">Frisch machen &amp; ausruhen</div>
+        <div class="event-detail">Auspacken, Abfahrtsstress abschütteln</div>
+      </div>
+    </div>
+
+    <!-- Pizza -->
+    <div class="event food">
+      <div class="event-time amber">17:30</div>
+      <div class="event-card accent-coral">
+        <span class="badge badge-coral">Abendessen</span>
+        <div class="event-name">Trattoria Da Adi</div>
+        <div class="event-detail">Oldrichova 251/3, 12800 Praha 2<br>Pizza &amp; Pasta — direkt ums Eck vom Airbnb</div>
+      </div>
+    </div>
+
+    <!-- Aufbruch Pub Crawl -->
+    <div class="event">
+      <div class="event-time">21:15</div>
+      <div class="event-card accent-blue">
+        <span class="badge badge-blue">Aufbruch</span>
+        <div class="event-name">Auf zum Monkey Pub Crawl</div>
+        <div class="event-detail">Sammeln &amp; losmachen</div>
+      </div>
+    </div>
+
+    <!-- Pub Crawl -->
+    <div class="event highlight">
+      <div class="event-time amber">22:00</div>
+      <div class="event-card accent-amber">
+        <span class="badge badge-amber">Nightlife</span>
+        <div class="event-name">Monkey Pub Crawl</div>
+        <div class="event-detail">Die legendärste Bar-Tour Prags — mehrere Stops, neue Freunde, kaltes Bier</div>
+      </div>
+    </div>
+
+    <!-- Duplex -->
+    <div class="event highlight">
+      <div class="event-time amber">00:30</div>
+      <div class="event-card accent-pink">
+        <span class="badge badge-pink">Club</span>
+        <div class="event-name">Duplex Club Prag</div>
+        <div class="event-detail">Rooftop-Club direkt auf dem Wenzelsplatz — Dancefloor mit Aussicht</div>
+      </div>
+    </div>
+
+    <div class="open-end">Open End — die Nacht gehört euch</div>
+  </div>
+
+  <hr class="day-divider">
+
+  <!-- SAMSTAG -->
+  <div class="day-block">
+    <div class="day-header">
+      <div>
+        <div class="day-label">Samstag</div>
+        <div class="day-date">02. Mai 2026</div>
+      </div>
+      <div class="day-line"></div>
+    </div>
+
+    <!-- Morgen -->
+    <div class="event sleep">
+      <div class="event-time">Morgens</div>
+      <div class="event-card">
+        <span class="badge badge-gray">Freizeit</span>
+        <div class="event-name">Aufstehen, Chillen &amp; Frühstücken</div>
+        <div class="event-detail">Jeder macht sein Ding — erholen für den Abend</div>
+      </div>
+    </div>
+
+    <!-- Levels -->
+    <div class="event highlight">
+      <div class="event-time amber">14:30</div>
+      <div class="event-card accent-blue">
+        <span class="badge badge-blue">Highlight</span>
+        <div class="event-name">LEVELS Prag</div>
+        <div class="event-detail">Prags angesagtester Club — mehrere Floors, mehrere Vibes</div>
+      </div>
+    </div>
+
+    <!-- Fat Cat -->
+    <div class="event food">
+      <div class="event-time amber">19:00</div>
+      <div class="event-card accent-coral">
+        <span class="badge badge-coral">Abendessen</span>
+        <div class="event-name">Fat Cat Downtown Prag</div>
+        <div class="event-detail">Auftanken vor der zweiten Nacht</div>
+      </div>
+    </div>
+
+    <!-- Danach -->
+    <div class="event highlight">
+      <div class="event-time">Danach</div>
+      <div class="event-card accent-pink">
+        <span class="badge badge-pink">Nightlife</span>
+        <div class="event-name">Bar &amp; optional Club</div>
+        <div class="event-detail">Nach Interesse: <strong style="color:var(--text); font-weight:500;">Karlovy Lazne</strong> — Europas größter Multi-Floor Club direkt an der Karlsbrücke</div>
+      </div>
+    </div>
+
+    <div class="open-end">Open End — alles drin</div>
+  </div>
+
+  <hr class="day-divider">
+
+  <!-- SONNTAG -->
+  <div class="day-block">
+    <div class="day-header">
+      <div>
+        <div class="day-label">Sonntag</div>
+        <div class="day-date">03. Mai 2026</div>
+      </div>
+      <div class="day-line"></div>
+    </div>
+
+    <!-- Frühstück -->
+    <div class="event sleep">
+      <div class="event-time">Morgens</div>
+      <div class="event-card">
+        <span class="badge badge-gray">Entspannt</span>
+        <div class="event-name">Frühstücken &amp; Fertig machen</div>
+        <div class="event-detail">Gepäck packen, Zimmer übergeben</div>
+      </div>
+    </div>
+
+    <!-- Checkout -->
+    <div class="event">
+      <div class="event-time amber">14:00</div>
+      <div class="event-card accent-teal">
+        <span class="badge badge-teal">Checkout</span>
+        <div class="event-name">Checkout Airbnb &amp; Abfahrt</div>
+        <div class="event-detail">Oldrichova 247/5, Praha 2 — Schlüssel abgeben &amp; auf nach Hause</div>
+      </div>
+    </div>
+
+    <!-- Heimfahrt -->
+    <div class="travel-bar">
+      <div class="travel-icon">🏠</div>
+      <div class="travel-info">
+        <div class="travel-route">Prag → Deutschland</div>
+        <div class="travel-meta">~14:00 Abfahrt · Zuhause schlafen</div>
+      </div>
+      <div class="travel-duration">~7H</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Erstellt für <span>Stefan's JGA</span> · Prag · Mai 2026
+  </div>
+
+</div>
+</body>
+</html>
